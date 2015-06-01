@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
-#include <queue>
+#include <deque>
 using namespace std;
 int main()
 {
 
-	int slength = 0, glength = 0, counter1 = 0, counter2 = 0, numberOfLines = 0;
-	string input, goal;
+	int slength = 0, glength = 0, counter2 = 0, numberOfLines = 0, stringPosition = 0;
+	string input, goal, stringForPath;
 	bool valid = false, movePerformed = false, goalAttained = false;
 	while (valid != true)
 	{
@@ -14,7 +14,7 @@ int main()
 		cin >> input;
 		cout << "Input goal string: ";
 		cin >> goal;
-		char goalArray[1013];
+		char goalArray[1000];
 		
 		slength = input.size();
 		glength = goal.size();
@@ -25,29 +25,25 @@ int main()
 		else
 			valid = true;
 	}
-	char x[1000][1000] , temp[1][1000], test[1000];
-	for (int i = 0; i < 1000; i++)
-	{
-		for (int j = 0; j < 1000; j++)
+	char x[1][1000] , transfer[1][1000], test[1000];
+	deque<string> paths;
+	
+		for (int j = 0; j < 1000; j++)//set entire char array to null
 		{
-			x[i][j] = '\0';
+			x[0][j] = '\0';
 		}
-	}
+	for (int j = 0; j < 1000; j++)//set entire char array to null
+		{
+			transfer[0][j] = '\0';
+		}
 	strcpy_s(x[0], input.c_str());
-	while(goalAttained == false){
-		while(counter2 < slength){
-			if(numberOfLines+1 == 1000){
-				for(int j = 0; j<1000; j++){
-				x[0][j]=x[999][j];
-				}
-				numberOfLines = 0;
-				counter1= 0;
-				counter2 = 0;
-			}
+	paths.push_front(input);
+	while(goalAttained == false){//while goal not attained
+		while(counter2 < slength){ //run as many times as string is long
 
-for (int j = 0; j < 1000; j++)
+for (int j = 0; j < 1000; j++)//check to see it goal is reached
    {
-    test[j] =x[counter1][j];
+    test[j] =x[0][j];
    }
    string tst(test);
    if (tst.substr(0,glength)==goal)
@@ -57,42 +53,63 @@ for (int j = 0; j < 1000; j++)
     return 0;
    }
 			
-	if(x[counter1][counter2] == '(' || x[counter1][counter2] == '-'){ //Move left if hit (
+	if(x[0][counter2] == '(' || x[0][counter2] == '-'){ //Move left if hit (
 		counter2++;
 	}
-	else if(x[counter1][counter2] == ')'){ //Move to next line when done with first string in line
-		counter1++;
+	else if(x[0][counter2] == ')'){ //Move to next string when done with current string  ALL CHILDREN BORN: NOW SORT
+
+
+		//SORT ABOVE
+		stringPosition++;//increment position in string array
 		counter2 = 0;
+		paths.pop_back();
+		input = paths.back();//set input to next string 
+		strcpy_s(x[0], input.c_str());//set x[0] to input (the next srting)
 	}
-	else if(x[counter1][counter2+1] == '-'){  //if position to the right is -
+	else if(x[0][counter2+1] == '-'){  //if position to the right is -
+		stringForPath.clear();
+		
 		for(int i = 0;i<slength;i++){
-			x[numberOfLines+1][i]=x[counter1][i];  //write newest path to next line
+			transfer[0][i]=x[0][i];  //write newest path to next line
 		}
-		x[numberOfLines+1][counter2+1]=x[counter1][counter2];//in new line move char to -
-		x[numberOfLines+1][counter2] = '-';//in new line put - where char was	
+		transfer[0][counter2+1]=x[0][counter2];//in new line move char to -
+		transfer[0][counter2] = '-';//in new line put - where char was	
 			int i = slength; //start writing after length of next line
 			int j=0; //new counter
-			while(x[counter1][j] != '\0'){ //until end of current line
-			x[numberOfLines+1][i]=x[counter1][j];//position in next line = info from this line
+			while(x[0][j] != '\0'){ //until end of current line
+			transfer[0][i]=x[0][j];//position in next line = info from this line
 			i++;
 			j++;
 		}	
+			int n = 0;
+			while(transfer[0][n] != '\0'){
+			stringForPath+=transfer[0][n];
+			n++;
+			}
+			paths.push_front(stringForPath);
 				numberOfLines++; //increment number of lines
 					counter2++;
 	}
-	else if(x[counter1][counter2+2] == '-'){  //if position to the right is -
+	else if(x[0][counter2+2] == '-'){  //if position to the right is -
+		stringForPath.clear();
 		for(int i = 0;i<slength;i++){
-			x[numberOfLines+1][i]=x[counter1][i];  //write newest path to next line
+			transfer[0][i]=x[0][i];  //write newest path to next line
 		}
-		x[numberOfLines+1][counter2+2]=x[counter1][counter2];//in new line move char to -
-		x[numberOfLines+1][counter2] = '-';//in new line put - where char was	
+		transfer[0][counter2+2]=x[0][counter2];//in new line move char to -
+		transfer[0][counter2] = '-';//in new line put - where char was	
 			int i = slength; //start writing after length of next line
 			int j=0; //new counter
-			while(x[counter1][j] != '\0'){ //until end of current line
-			x[numberOfLines+1][i]=x[counter1][j];//position in next line = info from this line
+			while(x[0][j] != '\0'){ //until end of current line
+			transfer[0][i]=x[0][j];//position in next line = info from this line
 			i++;
 			j++;
 		}
+			int n = 0;
+			while(transfer[0][n] != '\0'){
+			stringForPath+=transfer[0][n];
+			n++;
+			}
+			paths.push_front(stringForPath);
 			numberOfLines++; //increment number of lines
 				counter2++;
 	}
