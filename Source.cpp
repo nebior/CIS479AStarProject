@@ -1,13 +1,20 @@
 #include <iostream>
 #include <string>
 #include <deque>
+#include <algorithm>
 using namespace std;
-int main()
-{
-	struct partialPath{
+struct partialPath{
 		string path;
 		int distanceTraveled;
 	};
+	bool path_sorter(partialPath const& lhs, partialPath const& rhs){
+			return lhs.distanceTraveled < rhs.distanceTraveled;
+	
+	}
+int main()
+{
+	
+
 	int slength = 0, glength = 0, counter2 = 0, numberOfLines = 0, stringPosition = 0;
 	string input, goal;
 	partialPath stringForPath, in;
@@ -18,8 +25,7 @@ int main()
 		cin >> input;
 		cout << "Input goal string: ";
 		cin >> goal;
-		char goalArray[1000];
-		
+		char goalArray[1000];		
 		slength = input.size();
 		glength = goal.size();
 		if (slength != glength)
@@ -44,6 +50,7 @@ int main()
 	in.path = input;
 	in.distanceTraveled = 0;
 	paths.push_front(in);
+	stringForPath.distanceTraveled = 0;
 	while(goalAttained == false){//while goal not attained
 		while(counter2 < slength){ //run as many times as string is long
 
@@ -63,17 +70,21 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 		counter2++;
 	}
 	else if(x[0][counter2] == ')'){ //Move to next string when done with current string  ALL CHILDREN BORN: NOW SORT
-
-
+		paths.pop_back();
+		//SORT QUEUE BY .distanceTraveled
+		sort(paths.begin(), paths.end(), &path_sorter);
 		//SORT ABOVE
 		stringPosition++;//increment position in string array
 		counter2 = 0;
-		paths.pop_back();
 		input = paths.back().path;//set input to next string 
 		strcpy_s(x[0], input.c_str());//set x[0] to input (the next srting)
 	}
-	else if(x[0][counter2+1] == '-'){  //if position to the right is -
-		stringForPath.path.erase();		
+	else if(x[0][counter2+1] == '-'){  //if position to the right is -	
+		stringForPath = paths.back();
+		stringForPath.path.erase();	
+		for(int i = 0;i<1000;i++){
+			transfer[0][i]=0;  //clear out transfer
+		}
 		for(int i = 0;i<slength;i++){
 			transfer[0][i]=x[0][i];  //write newest path to next line
 		}
@@ -91,13 +102,17 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 			stringForPath.path+=transfer[0][n];
 			n++;
 			}
-				stringForPath.distanceTraveled+=1;
+				stringForPath.distanceTraveled+=1;//increment distance, this is likely in wrong place
 			paths.push_front(stringForPath);
 				numberOfLines++; //increment number of lines
 					counter2++;
 	}
 	else if(x[0][counter2+2] == '-'){  //if position to the right is -
-		stringForPath.path.erase();
+		stringForPath = paths.back();
+		stringForPath.path.erase();		
+		for(int i = 0;i<1000;i++){
+			transfer[0][i]=0;  //clear out transfer
+		}
 		for(int i = 0;i<slength;i++){
 			transfer[0][i]=x[0][i];  //write newest path to next line
 		}
@@ -115,7 +130,7 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 			stringForPath.path+=transfer[0][n];
 			n++;
 			}
-			stringForPath.distanceTraveled+=1;
+			stringForPath.distanceTraveled+=1;//increment distance, this is likely in wrong place
 			paths.push_front(stringForPath);
 			numberOfLines++; //increment number of lines
 				counter2++;
