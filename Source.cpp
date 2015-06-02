@@ -217,31 +217,18 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 		counter2 = 0;
 		inputStar = pathsStar.back().path;//set input to next string 
 		strcpy_s(pathsStarCompareNewParent[0], inputStar.c_str());//set pathsStarNewParent[0] to inputStar (the next srting)
-	
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		strcpy_s(pathsStarCompareFromList[0], pathsStarCompare.back().path.c_str());//set pathsStarCompareFromList[0] to pathsStar string from list
-		pathsStarCompareHolder.push_front(pathsStarCompare.back());//push back of compare into top of holder
-		pathsStarCompare.pop_back();//remove parent from compare
-	
-
-
-
-
-
-
-
-
 		while(!pathsStarCompare.empty()){
+
+
+
 			compareCounter = 0;
-	
+	strcpy_s(pathsStarCompareFromList[0], pathsStarCompare.back().path.c_str());//set pathsStarCompareFromList[0] to pathsStar string from list
+	pathsStarCompareHolder.push_front(pathsStarCompare.back());//push back of compare into top of holder
+	pathsStarCompare.pop_back();//remove parent from compare
+
+
 
 
 			for(int t = 0;t<slength;t++){
@@ -251,11 +238,16 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 				}
 			}
 
+
+
+
 		if(compareCounter == slength)//if match
 		{
-		strcpy_s(pathsStarCompareFromList[0], pathsStarCompare.back().path.c_str());//set pathsStarCompareFromList[0] to pathsStar string from list
+		/*strcpy_s(pathsStarCompareFromList[0], pathsStarCompare.back().path.c_str());//set pathsStarCompareFromList[0] to pathsStar string from list
 		pathsStarCompareHolder.push_front(pathsStarCompare.back());//push back of compare into top of holder
 	    pathsStarCompare.pop_back();//remove parent from compare
+		*/
+		pathsStar.pop_back();
 		inputStar = pathsStar.back().path;//set input to next string 
 		strcpy_s(pathsStarCompareNewParent[0], inputStar.c_str());//set pathsStarNewParent[0] to inputStar (the next srting)
 		while(!pathsStarCompareHolder.empty()){
@@ -265,7 +257,15 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 		}
 
 
+
+
+
 		}
+
+
+
+
+
 		while(!pathsStarCompareHolder.empty()){
 			pathsStarCompare.push_back(pathsStarCompareHolder.front());
 			pathsStarCompareHolder.pop_front();
