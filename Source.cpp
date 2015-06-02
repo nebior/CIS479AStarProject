@@ -158,12 +158,25 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 
 	//Spaces * number of chars = # of steps worst case scenario if chars# = '-'# then that = slength - 2 * slength - 1
 	int estimate = ((slength - 2) / 2) * ((slength - 2)/ 2);
+	int compareCounter = 0;
 	goalAttained = false;
 	counter2 = 0;
 	inStar.path = inputStar;
 	inStar.distanceTraveled = 0;
 	inStar.distanceFromGoal = estimate;
 	deque<partialPathStar> pathsStar;
+	deque<partialPathStar> pathsStarCompare;
+	deque<partialPathStar> pathsStarCompareHolder;
+	char pathsStarCompareFromList[1][1000];
+	char pathsStarCompareNewParent[1][1000];
+		for (int j = 0; j < 1000; j++)//set entire char array to null
+		{
+			pathsStarCompareNewParent[0][j] = '\0';
+		}
+			for (int j = 0; j < 1000; j++)//set entire char array to null
+		{
+			pathsStarCompareFromList[0][j] = '\0';
+		}
 		for (int j = 0; j < 1000; j++)//set entire char array to null
 		{
 			x[0][j] = '\0';
@@ -194,13 +207,69 @@ for (int j = 0; j < 1000; j++)//check to see it goal is reached
 		counter2++;
 	}
 	else if(x[0][counter2] == ')'){ //Move to next string when done with current string  ALL CHILDREN BORN: NOW SORT
-		pathsStar.pop_back();
+		compareCounter = 0;
+		pathsStarCompare.push_back(pathsStar.back());//Pust this parent into compare queue
+		pathsStar.pop_back();//Kill the Parent
 		//SORT QUEUE BY .distanceFromGoal (estimated)
 		sort(pathsStar.begin(), pathsStar.end(), &path_sorterStarFrom);//Sort by estimated distance to goal
 		//SORT ABOVE
 		stringPosition++;//REMOVE AT THE END, THIS TRACKS PARENT COUNT FOR DEBUGGING
 		counter2 = 0;
 		inputStar = pathsStar.back().path;//set input to next string 
+		strcpy_s(pathsStarCompareNewParent[0], inputStar.c_str());//set pathsStarNewParent[0] to inputStar (the next srting)
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		strcpy_s(pathsStarCompareFromList[0], pathsStarCompare.back().path.c_str());//set pathsStarCompareFromList[0] to pathsStar string from list
+		pathsStarCompareHolder.push_front(pathsStarCompare.back());//push back of compare into top of holder
+		pathsStarCompare.pop_back();//remove parent from compare
+	
+
+
+
+
+
+
+
+
+		while(!pathsStarCompare.empty()){
+			compareCounter = 0;
+	
+
+
+			for(int t = 0;t<slength;t++){
+				if(pathsStarCompareNewParent[0][t] == pathsStarCompareFromList[0][t])//compare
+				{
+					compareCounter++;//if = slength then match
+				}
+			}
+
+		if(compareCounter == slength)//if match
+		{
+		strcpy_s(pathsStarCompareFromList[0], pathsStarCompare.back().path.c_str());//set pathsStarCompareFromList[0] to pathsStar string from list
+		pathsStarCompareHolder.push_front(pathsStarCompare.back());//push back of compare into top of holder
+	    pathsStarCompare.pop_back();//remove parent from compare
+		inputStar = pathsStar.back().path;//set input to next string 
+		strcpy_s(pathsStarCompareNewParent[0], inputStar.c_str());//set pathsStarNewParent[0] to inputStar (the next srting)
+		while(!pathsStarCompareHolder.empty()){
+			pathsStarCompare.push_back(pathsStarCompareHolder.front());//push the front of holder into the back of compare
+			pathsStarCompareHolder.pop_front();
+		}
+		}
+
+
+		}
+		while(!pathsStarCompareHolder.empty()){
+			pathsStarCompare.push_back(pathsStarCompareHolder.front());
+			pathsStarCompareHolder.pop_front();
+		}
 		strcpy_s(x[0], inputStar.c_str());//set x[0] to input (the next srting)
 	}
 	else if(x[0][counter2+1] == '-'){  //if position to the right is -	
